@@ -1,7 +1,7 @@
-__author__ = 'ysafe'
+__author__ = 'ysdev'
 
 #
-# DESC: song crawler to gather information from online sources
+# DESC: song crawler to gather information from online source
 # BY: ysfdev
 #
 #
