@@ -9,7 +9,7 @@ An easy python crawler to gather and download songs from online music sources
 # Requirements 
 
 - Requires modules Wget and Requests to be installed on the system.
-- The music source URLs are not included on the file. Send me a request if interested.
+- The music source URLs are not included on the source file. Send me a request if interested.
 
 # Installation 
 
