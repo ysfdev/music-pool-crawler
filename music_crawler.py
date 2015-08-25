@@ -1,7 +1,7 @@
 __author__ = 'ysdev'
 
 #
-# DESC: song crawler to gather information from online source
+# DESC: music crawler to gather and download songs from online music source
 # BY: ysfdev
 #
 #
