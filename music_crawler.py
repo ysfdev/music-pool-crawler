@@ -1,7 +1,7 @@
-__author__ = 'ysdev'
+__author__ = 'ysafe'
 
 #
-# DESC: music crawler to gather and download songs from online music source
+# DESC: song crawler to gather information from online sources
 # BY: ysfdev
 #
 #
@@ -52,40 +52,42 @@ def genre_search_prompt():
         print(30 * "*")
 
         print("Genres List:\n"
-              "1)Bachata\n"
-              "2)Reggaeton\n"
-              "3)Salsa\n"
-              "4)Tipico\n"
-              "5)Merengue\n"
+              "1)Hip Hop\n"
+              "2)Latin Hip Hop\n"
+              "3)R&B\n"
+              "4)Reggae\n"
+              "5)Reggaeton\n"
               "6)Dj Tools\n"
-              "7)Latin Hip Hop\n"
-              "8)Hip Hop\n"
-              "9)Cumbia\n"
-              "10)Balada\n"
-              "11)R&B")
+              "7)Dj Drops(Spanish)\n"
+              "8)Bachata\n"
+              "9)Tipico\n"
+              "10)Merengue\n"
+              "11)Salsa\n"
+              "12)Cumbia\n"
+              "13)Balada")
 
         print(30 * "-")
         genre_selection = str(input("Select Genre To Search or 0 (Go Back): "))
 
         if genre_selection == "1":
 
-            genre_search = "Bachata"
+            genre_search = "Hip Hop"
 
         elif genre_selection == "2":
 
-            genre_search = "Reggaeton"
+            genre_search = "Latin Hip Hop"
 
         elif genre_selection == "3":
 
-            genre_search = "Salsa"
+            genre_search = "R%26B"
 
         elif genre_selection == "4":
 
-            genre_search = "Tipico"
+            genre_search = "Reggae"
 
         elif genre_selection == "5":
 
-            genre_search = "Merengue"
+            genre_search = "Reggaeton"
 
         elif genre_selection == "6":
 
@@ -93,23 +95,32 @@ def genre_search_prompt():
 
         elif genre_selection == "7":
 
-            genre_search = "Latin Hip Hop"
+            genre_search = "Drops"
 
         elif genre_selection == "8":
 
-            genre_search = "Hip Hop"
+            genre_search = "Bachata"
 
         elif genre_selection == "9":
 
-            genre_search = "Cumbia"
+            genre_search = "Tipico"
 
         elif genre_selection == "10":
 
-            genre_search = "Balada"
+            genre_search = "Merengue"
 
         elif genre_selection == "11":
 
-            genre_search = "R&B"
+            genre_search = "Salsa"
+
+        elif genre_selection == "12":
+
+            genre_search = "Cumbia"
+
+        elif genre_selection == "13":
+
+            genre_search = "Balada"
+
 
         elif genre_selection == "0":
 
@@ -119,7 +130,7 @@ def genre_search_prompt():
             print("Invalid Option")
             sleep(2)
 
-        # Set seach string to genre search
+        # Set search string to genre search
         musicCrawler.genre_search = genre_search
 
 def download_options_prompt():
@@ -182,8 +193,6 @@ def set_download_prompt():
           "3)Print Current Download Path ")
     print(30 * "-")
     user_opt = str(input("Select Download Location( 0 to go back): "))
-
-
 
     if user_opt == '1':
 
@@ -270,7 +279,7 @@ def verify_download_path_state(f):
     :return: the
     '''
 
-    @wraps(f) # wraps the given func with all tis arguments
+    @wraps(f) # wraps the given func with all its arguments
     def check_download_path(*args, **kwargs):
         user_path = os.path.expanduser("~")
 
@@ -289,6 +298,22 @@ def verify_download_path_state(f):
     return check_download_path
 
 
+
+# CLEAR SCREEN OF SHELL
+def clear_shell_screen():
+
+    os_platform = pf.system()
+
+    # check for the user OS platform to clear screen
+    if os_platform == 'Linux':
+
+        clear = sp.call('clear', shell=True)
+
+    elif os_platform == "Windows":
+
+        clear = sp.call('cls', shell=True)
+
+    return clear
 
 
 # MAIN CLASS
@@ -318,38 +343,49 @@ class musicCrawler:
         :param search_option: Sets the option for the URL to be used either 'song' or 'genre'.
         :return: Display retrieved songs list
         """
-        string_search = musicCrawler.search_string.upper()
-        q = {'keywords': string_search}
-        search_query = str(urllib.parse.urlencode(q))
-        genre_search = str(musicCrawler.genre_search)
-        page_num = str(musicCrawler.page_num)
 
-        if search_option == 'song':
+        if musicCrawler.song_url == "" or musicCrawler.genre_url == "":
 
-            data_url = musicCrawler.song_url % (page_num, search_query)
-            last_page_count_url = musicCrawler.song_page_count_url % search_query
-
-        elif search_option == 'genre':
-            data_url = musicCrawler.genre_url % (page_num, genre_search)
-            last_page_count_url = musicCrawler.genre_page_count_url % genre_search
-
-        # GET data from url
-        print("retrieving data ...")
-        response_data = requests.get(data_url)
-        response_last_page_count = requests.get(last_page_count_url)
-
-        if response_data.status_code == 200:
-
-            # Decode the Json response into  a dict
-            music_data = response_data.json()
-            total_pages_count = response_last_page_count.json()
-
-            # parse data and display it
-            musicCrawler.parse_music_data(self, music_data, total_pages_count)
+            print("Download sources not provided. Check Readme for details.")
+            sleep(3)
+            main()
 
         else:
+            string_search = musicCrawler.search_string.upper()
+            q = {'keywords': string_search}
+            search_query = str(urllib.parse.urlencode(q))
+            genre_search = str(musicCrawler.genre_search)
+            page_num = str(musicCrawler.page_num)
 
-            print("Unable To Retrieve Data. Request Status: &s")
+            if search_option == 'song':
+
+                data_url = musicCrawler.song_url % (page_num, search_query)
+                last_page_count_url = musicCrawler.song_page_count_url % search_query
+
+            elif search_option == 'genre':
+                data_url = musicCrawler.genre_url % (page_num, genre_search)
+                last_page_count_url = musicCrawler.genre_page_count_url % genre_search
+
+            # GET data from url
+            try:
+                print("retrieving data ...")
+                response_data = requests.get(data_url)
+                response_last_page_count = requests.get(last_page_count_url)
+            except Exception:
+                print("Error retrieving data from source.")
+
+            if response_data.status_code == 200:
+
+                # Decode the Json response into  a dict
+                music_data = response_data.json()
+                total_pages_count = response_last_page_count.json()
+
+                # parse data and display it
+                musicCrawler.parse_music_data(self, music_data, total_pages_count)
+
+            else:
+
+                print("Unable To Parse Data.")
 
     # GET & DISPLAY SONGS
     def parse_music_data(self, music_data, total_pages_count):
