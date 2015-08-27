@@ -316,6 +316,12 @@ def clear_shell_screen():
     return clear
 
 
+# EXIT PROGRAM
+def exit_program():
+
+    clear_shell_screen()
+    sys.exit()
+
 # MAIN CLASS
 
 class musicCrawler:
@@ -439,7 +445,7 @@ class musicCrawler:
                 song_file_name = music_data['data'][counter]['aFile']  # Has .mp3 file
 
 
-                print("[" + str(counter) + "] - ", song_file_name, "BMP:", song_bmp, "YEAR:", song_year)
+                print("[" + str(counter) + "] - ", song_file_name) # "BMP:", song_bmp, "YEAR:", song_year)
 
                 if counter < 100:  # Making sure not to iterate past the last song
 
@@ -531,7 +537,12 @@ class musicCrawler:
             song_ID = music_data['data'][counter]['audioId']
             song_file_name = music_data['data'][counter]['aFile']
 
-            musicCrawler.download_song(self, song_file_name, int(song_ID), download_dir)
+            if not os.path.isfile(os.path.join(download_dir, song_file_name)): # check if song has been downloaded before
+
+                musicCrawler.download_song(self, song_file_name, int(song_ID), download_dir)
+
+            else:
+                print("Skipping song "+song_file_name+". Already downloaded ")
 
             if counter < 100:  # Making sure not to iterate past the last song
 
@@ -559,14 +570,15 @@ class musicCrawler:
     # DOWNLOAD SONGS
     def download_song(self, songTitle, song_ID, download_dir):
 
-
         song_ID = str(song_ID)
         download_url = (musicCrawler.music_download_url + song_ID + ".mp3")
+        song_local_path = os.path.join(download_dir, songTitle)
 
         print(30 * "-")
         print("Downloading Song: " + songTitle)
 
         # handle exception if mp3 file is not found on url source
+
         try:
             wget.download(download_url, download_dir)  # download the mp3 file from url to download directory
 
@@ -581,20 +593,11 @@ class musicCrawler:
 
         try:
             print("\n""Parsing Song: " + songTitle)
-            shutil.move(song_ID_path, song_title_path) # parse the song id with actual song name
+            shutil.move(song_ID_path, song_title_path)  # parse the song id with actual song name
             print(30 * "-")
         except FileNotFoundError:
             print("Song ID ", song_ID + " Not Found")
             pass
-
-# EXIT PROGRAM
-def exit_program(self):
-
-    clear_shell_screen
-    sys.exit()
-
-
-
 
 
 # MAIN FUNCTION
